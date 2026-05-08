@@ -9,7 +9,12 @@ console.log("[Server] Port:", PORT);
 console.log("[Server] Node Environment:", process.env.NODE_ENV || "development");
 
 connectDB()
-  .then(async () => {
+  .then(async (dbConn) => {
+    if (!dbConn) {
+      console.warn("[Server] MongoDB not configured; starting server without DB-backed features.");
+      return;
+    }
+
     console.log("[Server] Database connected, seeding users...");
     await seedDevUsers();
     console.log("[Server] Database seeding complete");
@@ -24,3 +29,4 @@ connectDB()
     console.error("[Server] Startup error:", error);
     process.exit(1);
   });
+

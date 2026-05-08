@@ -13,10 +13,14 @@ const connectDB = async () => {
     process.env.RAILWAY_URL;
 
   if (!uri) {
-    throw new Error(
-      "MongoDB connection string is missing. Set one of: MONGODB_URI, DATABASE_URL, MONGO_URI, MONGODB_URL, MONGO_URL, RAILWAY_MONGODB_URI, or RAILWAY_URL."
+    // In some deployment environments (e.g., health checks), MongoDB may be
+    // intentionally not configured. Don't crash the whole process.
+    console.warn(
+      "[MongoDB] MongoDB connection string is missing. Set one of: MONGODB_URI, DATABASE_URL, MONGO_URI, MONGODB_URL, MONGO_URL, RAILWAY_MONGODB_URI, or RAILWAY_URL."
     );
+    return null;
   }
+
 
   const maxRetries = Number(process.env.MONGODB_MAX_RETRIES || 5);
   let lastError;
