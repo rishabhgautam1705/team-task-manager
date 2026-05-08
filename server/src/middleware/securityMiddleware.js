@@ -2,7 +2,7 @@ import rateLimit from "express-rate-limit";
 import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
 import xss from "xss-clean";
-import { allowedOrigins, csrfTokens, isProduction } from "../config/security.js";
+import { allowedOrigins, csrfTokens, cookieOptions, isProduction } from "../config/security.js";
 
 export const corsOptions = {
   origin(origin, callback) {
@@ -38,11 +38,7 @@ export const sanitizeRequest = [mongoSanitize(), xss(), hpp()];
 export const issueCsrfToken = (req, res, next) => {
   if (!req.cookies?.csrfSecret) {
     const secret = csrfTokens.secretSync();
-    res.cookie("csrfSecret", secret, {
-      httpOnly: true,
-      secure: false, // Allow on localhost
-      sameSite: "none", // Allow cross-origin
-    });
+    res.cookie("csrfSecret", secret, cookieOptions(24 * 60 * 60 * 1000));
     req.csrfSecret = secret;
   } else {
     req.csrfSecret = req.cookies.csrfSecret;

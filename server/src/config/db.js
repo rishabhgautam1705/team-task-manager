@@ -3,10 +3,12 @@ import mongoose from "mongoose";
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const connectDB = async () => {
-  const uri = process.env.MONGODB_URI;
+  const uri = process.env.MONGODB_URI || process.env.DATABASE_URL || process.env.MONGO_URI || process.env.MONGODB_URL;
 
   if (!uri) {
-    throw new Error("MONGODB_URI is required. Use MongoDB Atlas or a managed MongoDB connection.");
+    throw new Error(
+      "MONGODB_URI is required. Set MONGODB_URI, DATABASE_URL, MONGO_URI, or MONGODB_URL in your environment."
+    );
   }
 
   const maxRetries = Number(process.env.MONGODB_MAX_RETRIES || 5);
