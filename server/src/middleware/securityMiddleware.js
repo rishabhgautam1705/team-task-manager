@@ -17,7 +17,13 @@ export const corsOptions = {
 
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "X-CSRF-Token"],
+  allowedHeaders: [
+    "Content-Type",
+    "X-CSRF-Token",
+    "x-csrf-token",
+    "X-CSRF-Token",
+    "x-csrf_token",
+  ],
 };
 
 export const apiLimiter = rateLimit({
@@ -53,10 +59,22 @@ export const issueCsrfToken = (req, res, next) => {
 
 export const csrfProtection = (req, _res, next) => {
   if (["GET", "HEAD", "OPTIONS"].includes(req.method)) return next();
-  const token = req.headers["x-csrf-token"];
+
+  const headerToken =
+    req.headers["x-csrf-token"] ||
+    req.headers["x-csrf_token"] ||
+    req.headers["x-csrf-token".toLowerCase()] ||
+    req.headers["X-CSRF-Token"];
+
+  const bodyToken = req.body?.csrfToken || req.body?.csrf_token;
+  const queryToken = req.query?.csrfToken || req.query?.csrf_token;
+
+  const token = headerToken || bodyToken || queryToken;
+
   if (token && req.cookies?.csrfSecret && csrfTokens.verify(req.cookies.csrfSecret, token)) {
     return next();
   }
+
   const error = new Error("Invalid or missing CSRF token");
   error.statusCode = 403;
   return next(error);
