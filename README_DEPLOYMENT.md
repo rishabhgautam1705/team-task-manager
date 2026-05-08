@@ -74,11 +74,18 @@ team-task-manager/
 
 ## ⚙️ Environment Configuration
 
-For this deployment, ensure:
-- `server/.env` contains MongoDB Atlas URI
-- `client/.env` contains `VITE_API_URL=http://localhost:5001/api`
+For this deployment, ensure these environment variables are set:
+- `MONGODB_URI` or one of: `DATABASE_URL`, `MONGO_URI`, `MONGODB_URL`, `MONGO_URL`, `RAILWAY_MONGODB_URI`, `RAILWAY_URL`
+- `JWT_SECRET`
+- `JWT_EXPIRES_IN`
+- `CLIENT_URL`
+- `NODE_ENV=production`
+- `PORT` is usually provided by Railway automatically
 
-These files are in `.gitignore` and won't be committed (correct for security).
+For local development only:
+- `client/.env` should contain `VITE_API_URL=http://localhost:5001/api`
+
+These `.env` files are in `.gitignore` and won't be committed.
 
 ---
 

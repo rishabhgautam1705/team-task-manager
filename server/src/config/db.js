@@ -3,11 +3,18 @@ import mongoose from "mongoose";
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const connectDB = async () => {
-  const uri = process.env.MONGODB_URI || process.env.DATABASE_URL || process.env.MONGO_URI || process.env.MONGODB_URL;
+    const uri =
+    process.env.MONGODB_URI ||
+    process.env.DATABASE_URL ||
+    process.env.MONGO_URI ||
+    process.env.MONGODB_URL ||
+    process.env.MONGO_URL ||
+    process.env.RAILWAY_MONGODB_URI ||
+    process.env.RAILWAY_URL;
 
   if (!uri) {
     throw new Error(
-      "MONGODB_URI is required. Set MONGODB_URI, DATABASE_URL, MONGO_URI, or MONGODB_URL in your environment."
+      "MongoDB connection string is missing. Set one of: MONGODB_URI, DATABASE_URL, MONGO_URI, MONGODB_URL, MONGO_URL, RAILWAY_MONGODB_URI, or RAILWAY_URL."
     );
   }
 
