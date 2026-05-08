@@ -11,7 +11,9 @@ console.log("[Server] Node Environment:", process.env.NODE_ENV || "development")
 connectDB()
   .then(async (dbConn) => {
     if (!dbConn) {
-      console.warn("[Server] MongoDB not configured; starting server without DB-backed features.");
+      console.warn(
+        "[Server] MongoDB not available; starting server without DB-backed features."
+      );
       return;
     }
 
@@ -25,6 +27,7 @@ connectDB()
       console.log(`[Server] API URL: http://localhost:${PORT}/api`);
     });
   })
+
   .catch((error) => {
     console.error("[Server] Startup error:", error);
     process.exit(1);

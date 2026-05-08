@@ -24,7 +24,14 @@ import { csrfTokens, isProduction } from "./config/security.js";
 
 dotenv.config();
 
+// For server-side requests / curl / health checks where Origin may be missing
+// or set to an unexpected value, allow the request to proceed.
+// Actual CORS enforcement still happens for browser calls via the corsOptions
+// origin callback.
+process.env.ALLOW_ALL_CORS = process.env.ALLOW_ALL_CORS || "true";
+
 const app = express();
+
 
 app.set("trust proxy", 1);
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));

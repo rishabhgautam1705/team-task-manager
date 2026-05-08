@@ -40,7 +40,13 @@ const connectDB = async () => {
     }
   }
 
-  throw lastError;
+  // Don't crash the whole server if MongoDB auth/connection fails.
+  console.warn(
+    "[MongoDB] Unable to connect after retries; continuing without DB.",
+    lastError?.message || lastError
+  );
+  return null;
 };
+
 
 export default connectDB;
